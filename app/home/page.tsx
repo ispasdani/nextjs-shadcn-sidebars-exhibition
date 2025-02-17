@@ -32,6 +32,7 @@ import {
 import { usePathname } from 'next/navigation'
 import FullLogo from '@/components/custom-ui/FullLogo'
 import ShortLogo from '@/components/custom-ui/ShortLogo'
+import Link from 'next/link'
 
 const itemsSupplier = [
     { title: 'Home', url: '/suppliers', icon: Home },
@@ -39,6 +40,14 @@ const itemsSupplier = [
     { title: 'Calendar', url: '/suppliers', icon: Calendar },
     { title: 'Search', url: '/suppliers', icon: Search },
     { title: 'Settings', url: '/suppliers', icon: Settings },
+]
+
+const itemsHome = [
+    { title: 'Home', url: '/home', icon: Home },
+    { title: 'Inbox', url: '/home', icon: Inbox },
+    { title: 'Calendar', url: '/home', icon: Calendar },
+    { title: 'Search', url: '/home', icon: Search },
+    { title: 'Settings', url: '/home', icon: Settings },
 ]
 
 const items = [
@@ -50,14 +59,14 @@ const items = [
 ]
 
 const sections = [
-    { title: 'Home', icon: Home, items },
+    { title: 'Home', icon: Home, items: itemsHome },
     { title: 'Suppliers', icon: WholeWord, items: itemsSupplier },
     { title: 'Reviews', icon: Inbox, items },
     { title: 'Contacts', icon: Calendar, items },
     { title: 'Dashboard', icon: Settings, items },
 ]
 
-const Page = () => {
+const HomePage = () => {
     const pathname = usePathname()
 
     const { open, setOpen } = useSidebar()
@@ -94,17 +103,16 @@ const Page = () => {
                     </SidebarHeader>
                     <div className="h-[76vh] mt-2">
                         {sections.map((section) => (
-                            <>
+                            <div key={section.title}>
                                 {open ? (
-                                    <Collapsible key={section.title}>
+                                    <Collapsible>
                                         <SidebarGroup>
                                             <SidebarGroupLabel className="p-0">
                                                 <CollapsibleTrigger className="flex justify-between items-center w-full hover:bg-gray-100 py-2 px-1 rounded-[6px] border-none text-[16px]">
                                                     <div className="flex items-center gap-2">
-                                                        <section.icon className="w-5 h-5" />{' '}
+                                                        <section.icon className="w-5 h-5" />
                                                         {section.title}
                                                     </div>
-
                                                     <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
                                                 </CollapsibleTrigger>
                                             </SidebarGroupLabel>
@@ -121,7 +129,7 @@ const Page = () => {
                                                                     <SidebarMenuButton
                                                                         asChild
                                                                     >
-                                                                        <a
+                                                                        <Link
                                                                             href={
                                                                                 item.url
                                                                             }
@@ -132,7 +140,7 @@ const Page = () => {
                                                                                     item.title
                                                                                 }
                                                                             </span>
-                                                                        </a>
+                                                                        </Link>
                                                                     </SidebarMenuButton>
                                                                 </SidebarMenuItem>
                                                             )
@@ -145,15 +153,16 @@ const Page = () => {
                                 ) : (
                                     <a
                                         key={section.title}
-                                        href=""
+                                        href={section.items[0]?.url || '#'}
                                         className="w-full flex justify-center items-center my-3"
                                     >
                                         <section.icon className="w-6 h-6" />
                                     </a>
                                 )}
-                            </>
+                            </div>
                         ))}
                     </div>
+
                     <SidebarFooter
                         onClick={toggleSidebar}
                         className={`h-[8vh] border-t border-[#e5e5e5] flex justify-center cursor-pointer ${
@@ -178,4 +187,4 @@ const Page = () => {
     )
 }
 
-export default Page
+export default HomePage
